@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY" />
+            <!--<PatternLayout pattern="%highlight{%d{[yyy-MM-dd HH:mm:ss.SSS]} [%t] [%-5level] [%l] - %msg%n}"/>-->
+            <PatternLayout pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5p]  %c {%F:%L} - %m%n}" />
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="/opt/nt-logs/sale/sale.log" filePattern="/opt/nt-logs/sale/sale-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{[yyy-MM-dd HH:mm:ss.SSS]} [%t] [%-5level] [%l] - %msg%n" />
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="20"/><!-- 最多保留20个文件 -->
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+
+        <!-- 打印mybatis日志，查看sql（这里打印的是namespace为com.benmei.weike.dao的xml中的语句） -->
+        <Logger name="com.benmei.sale.dao" level="debug"  additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+    </Loggers>
+</Configuration>

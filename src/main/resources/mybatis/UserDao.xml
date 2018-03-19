@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.benmei.sale.dao.UserDao">
+    <select id="selectUser" resultType="com.benmei.sale.entity.SrUser">
+        select * from sr_user
+    </select>
+    <select id="userLogin" resultType="com.benmei.sale.entity.SrUser">
+        select * from sr_user where user_name = #{user_name} and user_type = 1
+    </select>
+    <select id="selectUserDetail" resultType="com.benmei.sale.entity.SrUser">
+        select * from sr_user where user_id = #{user_id} and user_type = 1
+    </select>
+    <update id="updateUserProperty" parameterType="com.benmei.sale.entity.SrUser" useGeneratedKeys="true" keyProperty="sale_id">
+        update sr_user
+        <set>
+            <if test="pojo.user_name != null ">user_name = #{pojo.user_name},</if>
+            <if test="pojo.user_password != null ">user_password = #{pojo.user_password},</if>
+            <if test="pojo.user_head_portrait != null ">user_head_portrait = #{pojo.user_head_portrait},</if>
+        </set>
+        where user_id = #{pojo.user_id}
+    </update>
+</mapper>

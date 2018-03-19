@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.benmei.sale.dao.SaleDao">
+    <resultMap id="resultMap" type="com.benmei.sale.dto.UserSale">
+        <result column="sale_id" property="sale_id"/>
+        <result column="user_id" property="user_id"/>
+        <result column="category_id" property="category_id"/>
+        <result column="category_name" property="category_name"/>
+        <result column="sale_money" property="sale_money"/>
+        <result column="sale_comment" property="sale_comment"/>
+        <result column="create_time" property="create_time"/>
+        <result column="update_time" property="update_time"/>
+        <result column="sale_state" property="sale_state"/>
+    </resultMap>
+    <select id="findUserSale" resultType="com.benmei.sale.dto.UserSale">
+        select su.user_name,ss.sale_money,ss.update_time as sale_time from sr_sale ss
+            left join sr_user su on ss.user_id = su.user_id
+            where ss.sale_state = 1
+            ORDER BY update_time desc
+    </select>
+    <select id="getUserSaleDayCount" resultType="com.benmei.sale.dto.UserSaleCount">
+        select su.user_head_portrait as user_head_protrait,su.user_name,sum(ss.sale_money) as user_sale_count from sr_sale ss
+            left join sr_user su on ss.user_id = su.user_id
+            where  TO_DAYS(ss.update_time) = TO_DAYS(now()) and ss.sale_state = 1
+            GROUP BY su.user_id
+            order by user_sale_count desc
+    </select>
+    <select id="getUserSaleWeekCount" resultType="com.benmei.sale.dto.UserSaleCount">
+        select su.user_head_portrait as user_head_protrait,su.user_name,sum(ss.sale_money) as user_sale_count from sr_sale ss
+            left join sr_user su on ss.user_id = su.user_id
+            where ss.update_time >= DATE_SUB(CURRENT_DATE,INTERVAL 7 DAY) and ss.sale_state = 1
+            GROUP BY su.user_id
+            order by user_sale_count desc
+    </select>
+    <select id="getUserSaleMonthCount" resultType="com.benmei.sale.dto.UserSaleCount">
+        select su.user_head_portrait as user_head_protrait,su.user_name,sum(ss.sale_money) as user_sale_count from sr_sale ss
+            left join sr_user su on ss.user_id = su.user_id
+            where DATE_FORMAT(ss.update_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') and ss.sale_state = 1
+            GROUP BY su.user_id
+            order by user_sale_count desc
+    </select>
+    <select id="findAllSaleByUserId" parameterType="com.benmei.sale.dto.Page" resultType="com.benmei.sale.dto.PersonalSaleRecord">
+        select sale_id,category_name,sale_money,update_time,sale_comment from sr_sale
+        where user_id = #{page.user_id}  and sale_state = 1
+        order by update_time desc
+        limit #{page.off_set},#{page.page_size}
+    </select>
+    <select id="findAllSaleByUserIdCount" parameterType="com.benmei.sale.dto.Page" resultType="java.lang.Integer">
+        select count(1) from sr_sale
+        where user_id = #{page.user_id}  and sale_state = 1
+    </select>
+    <insert id="insertSaleRecord" parameterType="com.benmei.sale.entity.SrSale">
+        insert into sr_sale
+          <trim prefix="(" suffix=")" suffixOverrides=",">
+              sale_id,
+              <if test="pojo.user_id != null">user_id,</if>
+              <if test="pojo.category_id != null">category_id,</if>
+              <if test="pojo.category_name != null">category_name,</if>
+              <if test="pojo.sale_money != null">sale_money,</if>
+              <if test="pojo.sale_comment != null">sale_comment,</if>
+              create_time,
+              update_time,
+              <if test="pojo.sale_state != null">sale_state,</if>
+          </trim>
+        VALUES
+          <trim prefix="(" suffix=")" suffixOverrides=",">
+              NULL,
+              <if test="pojo.user_id != null">#{pojo.user_id},</if>
+              <if test="pojo.category_id != null">#{pojo.category_id},</if>
+              <if test="pojo.category_name != null">#{pojo.category_name},</if>
+              <if test="pojo.sale_money != null">#{pojo.sale_money},</if>
+              <if test="pojo.sale_comment != null">#{pojo.sale_comment},</if>
+              CURRENT_TIMESTAMP,
+              CURRENT_TIMESTAMP,
+              <if test="pojo.sale_state != null">#{pojo.sale_state},</if>
+          </trim>
+    </insert>
+    <update id="updateSaleRecord" parameterType="com.benmei.sale.entity.SrSale">
+        update sr_sale
+        <set>
+            <if test="pojo.category_id != null"> category_id = #{pojo.category_id},</if>
+            <if test="pojo.category_name != null"> category_name = #{pojo.category_name},</if>
+            <if test="pojo.sale_money != null"> sale_money = #{pojo.sale_money},</if>
+            <if test="pojo.sale_comment != null"> sale_comment = #{pojo.sale_comment},</if>
+            update_time =  CURRENT_TIMESTAMP,
+            <if test="pojo.sale_state != null"> sale_state = #{pojo.sale_state},</if>
+        </set>
+        where sale_id = #{pojo.sale_id}
+    </update>
+</mapper>

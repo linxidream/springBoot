@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!--<meta http-equiv="refresh" content="180">-->
+    <title>外教君销售实时战报</title>
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+</head>
+
+<body>
+<div id="wrap">
+    <!--登录弹框-->
+    <div class="login_page" v-show="is_login">
+        <div class="login_page_content">
+            <h4>账号登录</h4>
+            <p class="close" @click="CloseLoginFun()">×</p>
+            <input type="text" placeholder="请输入用户名" v-model="input_username"><br>
+            <input type="password" placeholder="请输入密码" v-model="input_password"  @keydown.enter="UserLoginFun()"><br>
+            <button class="loginBtn" @click="UserLoginFun()">登录</button>
+        </div>
+
+    </div>
+    <div class="pageContent">
+        <!--logo和标题-->
+        <div class="top_title">
+            <h1><img class="Logo" src="img/LogoImg.png"/> 外教君销售实时战报</h1>
+            <p class="now_time">{{clock_time}}</p>
+            <p class="login" @click="ShowLoginFun()" v-show="noLogin" >登录</p>
+            <p class="login personal_center" @click="personalCenterFun(user_id)" v-show="logged">
+                <img class="personal_centerImg" :src="user_head_portrait" alt="头像"><span>{{user_names}}</span>
+            </p>
+        </div>
+        <div class="bottom_content">
+            <!--本月实时成交额-->
+            <div class="month_sale_model">
+                <h3>本月实时成交额</h3>
+                <ul>
+                    <li v-for="item in userSaleList">
+                        <p>
+                            <span class="month_sale_name">
+                                {{item.user_name}}
+                            </span> <br>
+                            <span class="month_sale_time">
+                                {{item.sale_time}}
+                            </span>
+                        </p>
+                        <p class="month_sale_count">
+                            ¥{{item.sale_money}}
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="right_business">
+                <!--业务模块-->
+                <div class="business_model">
+                    <p class="business_unite">业务模块:(单位:元)</p>
+                    <ul>
+                        <li v-for="item in categorySaleList">
+                            <p>
+                                <span class="business_name">{{item.category_name}}</span><br>
+                                <span class="business_count">¥{{item.category_money}}</span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <!--日、周、月排行榜-->
+                <div class="rank_model">
+                    <div>
+                        <h3 class="rank_model_title">个人日排行榜</h3>
+                        <ul>
+                            <li class="rank_model_content" v-for="item in userDayList">
+                                <p :class="{day_rank:$index<3,day_rank_fore:$index>=3}">{{$index+1}}</p>
+                                <img class="avatarImg" :src="item.user_head_protrait" alt="头像">
+                                <p class="name">{{item.user_name}}</p>
+
+                                <p class="rank_count">¥{{item.user_sale_count}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="rank_model_title">个人周排行榜</h3>
+                        <ul>
+                            <li class="rank_model_content" v-for="item in userWeekList">
+                                <p :class="{day_rank:$index<3,day_rank_fore:$index>=3}">{{$index+1}}</p>
+                                <img class="avatarImg" :src="item.user_head_protrait" alt="头像">
+                                <p class="name">{{item.user_name}}</p>
+                                <p class="rank_count">¥{{item.user_sale_count}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="rank_model_title">个人月排行榜</h3>
+                        <ul>
+
+                            <li class="rank_model_content" v-for="item in userMonthList">
+                                <p :class="{day_rank:$index<3,day_rank_fore:$index>=3}">{{$index+1}}</p>
+                                <img class="avatarImg" :src="item.user_head_protrait" alt="头像">
+                                <p class="name">{{item.user_name}}</p>
+                                <p class="rank_count">¥{{item.user_sale_count}}</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+</html>
+<script src="./js/vue.js" type="text/javascript"></script>
+<script src="./js/vue-resource.js" type="text/javascript"></script>
+<script src="./js/url.js" type="text/javascript"></script>
+<script src="./js/index.js" type="text/javascript"></script>

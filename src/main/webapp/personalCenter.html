@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link rel="stylesheet" href="./css/personalCenter.css">
+</head>
+<body>
+<div id="wrap">
+    <div class="top">
+        <p>
+            <span @click="GoHomeFun()">返回首页</span>
+            <span @click="QuitLoginFun()">退出</span>
+        </p>
+    </div>
+    <div class="content_data">
+        <!--个人信息-->
+        <div class="personal_info">
+            <div class="personal_img">
+                <img class="personal_head_img" :src="user_head_portrait" alt="">
+                <label for="avatar" class="write_head_img" >编辑</label>
+
+                <input type="file" id="avatar" accept="image/*" style="display:none" @change="changeImage($event)">
+            </div>
+            <!--<button @click="subFun">提交</button>-->
+            <p class="personal_name">{{user_name}}</p>
+            <!--<input type="file" value="编辑">-->
+            <div class="type">
+                类别:<select name="select" class="select" onchange="''" v-model="category_title">
+                <option :value="item.category_name" v-for="item in categoryList">{{item.category_name}}</option>
+            </select>
+            </div>
+            <div class="sale_count">
+                销售额:<input type="text" v-model="sale_count">
+            </div>
+            <div class="explain">
+                <p>备注:</p>
+                <textarea name="" id="" cols="30" rows="10" v-model="explain"></textarea>
+            </div>
+            <div>
+                <button class="sure_input" @click="AddData()">确认录入</button>
+            </div>
+        </div>
+        <!--数据内容-->
+        <div class="business_info">
+            <ul class="business_content">
+                <li class="business_content_title">
+                    <p>类别</p>
+                    <p>销售额</p>
+                    <p>时间</p>
+                    <p>备注</p>
+                    <p>操作</p>
+                </li>
+                <li class="business_content_data" v-for="item in user_sale_list">
+                    <p>{{item.category_name}}</p>
+                    <p>¥{{item.sale_money}}</p>
+                    <p>{{item.update_time}}</p>
+                    <p>{{item.sale_comment}}</p>
+                    <p>
+                        <span class="operation" @click="Update(item)">修改</span> |
+                        <span class="operation" @click="DeleteData(item)">删除</span>
+                    </p>
+                </li>
+            </ul>
+            <!--<ul class="page_sign">-->
+                <!--<li @click="FirstPageData">首页</li>-->
+                <!--<li @click="PrevPageData">上一页</li>-->
+                <!--<li v-if="pageNum>5">...</li>-->
+                <!--<li v-for="item in totle_page"  @click="PageNumFun(item+1)">{{item+1}}</li>-->
+                <!--<li v-if="totle_page>6" v-show="pageNum>totle_page-6?false:true">...</li>-->
+                <!--<li @click="NextPageData">下一页</li>-->
+                <!--<li @click="LastPageData">尾页</li>-->
+            <!--</ul>-->
+            <script type="text/x-template" id="page">
+                <ul class="pagination" >
+                    <li @click="goto(1)" ><a href="#">首页</a></li>
+                    <li @click="current-- && goto(current)" ><a href="#">上一页</a></li>
+                    <li v-for="index in pages" @click="goto(index)" :class="{'active':current == index}" :key="index">
+                        <a href="#" >{{index}}</a>
+                    </li>
+                    <li  @click="current++ && goto(current++)"><a href="#" >下一页</a></li>
+                    <li v-show="allpage != current && allpage != 0 " @click="goto(allpage)"><a href="#" >尾页</a></li>
+                </ul>
+            </script>
+            <page></page>
+        </div>
+    </div>
+    <!--弹框区域-->
+    <div class="Popup" v-show="isPopup">
+        <!--添加,修改,删除提示框-->
+        <div class="popup_info" v-if="isPopup_info">
+            {{popup_info_data}}
+        </div>
+        <!--修改数据弹框-->
+        <div class="change_popup" v-if="is_Change_popup">
+            <p class="change_popup_close"><span @click="CloseUpdate()">×</span></p>
+            <div class="type">
+                类别:<select name="select" onchange="''" v-model="update_category_title">
+                <option :value="item.category_name" v-for="item in categoryList">{{item.category_name}}</option>
+            </select>
+            </div>
+            <div class="sale_count">
+                销售额:<input type="text" v-model="update_sale_count">
+            </div>
+            <div class="explain">
+                <p>备注:</p>
+                <textarea cols="30" rows="10" v-model="update_explain"></textarea>
+            </div>
+            <div>
+                <button class="sure_input" @click="SureUpdate()">确认修改</button>
+            </div>
+        </div>
+        <!--删除数据弹框-->
+        <div class="delete_popup" v-show="is_Delete_popup">
+            <p>是否删除该数据</p>
+            <div class="delete_Btn">
+                <button class="sure_delete" @click="DeleteSureFun()">确认</button>
+                <button  class="cancel_delete" @click="DeleteCancelFun()">取消</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>
+<script src="./js/vue.js" type="text/javascript"></script>
+<script src="./js/vue-resource.js" type="text/javascript"></script>
+<script src="./js/url.js" type="text/javascript"></script>
+<script src="./js/personalCenter.js" type="text/javascript"></script>

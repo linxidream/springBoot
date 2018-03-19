@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.benmei.sale.dao.CategoryDao">
+    <select id="findCatagoryList" resultType="com.benmei.sale.entity.SrCategory">
+        select * from sr_category where state = 0
+    </select>
+    <select id="findCategoryData" resultType="com.benmei.sale.dto.CategoryAll">
+        select sc.category_id,IFNULL(sum(ss.sale_money),0) as category_money from sr_category sc
+            left join sr_sale ss on sc.category_id = ss.category_id
+            where sc.state = 0 and ss.sale_state = 1
+            group by sc.category_id
+    </select>
+    <select id="findCategoryName" resultType="java.lang.String">
+        select category_name from sr_category where category_id = #{category_id}
+    </select>
+</mapper>
