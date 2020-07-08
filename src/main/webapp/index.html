@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!--<meta http-equiv="refresh" content="180">-->
-    <title>外教君销售实时战报</title>
+    <title>测试界面展示</title>
     <link rel="stylesheet" type="text/css" href="css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
 </head>
@@ -25,7 +25,7 @@
     <div class="pageContent">
         <!--logo和标题-->
         <div class="top_title">
-            <h1><img class="Logo" src="img/LogoImg.png"/> 外教君销售实时战报</h1>
+            <h1><img class="Logo" src="img/111.png"/> 大标题</h1>
             <p class="now_time">{{clock_time}}</p>
             <p class="login" @click="ShowLoginFun()" v-show="noLogin" >登录</p>
             <p class="login personal_center" @click="personalCenterFun(user_id)" v-show="logged">
@@ -35,7 +35,7 @@
         <div class="bottom_content">
             <!--本月实时成交额-->
             <div class="month_sale_model">
-                <h3>本月实时成交额</h3>
+                <h3>左侧大列表</h3>
                 <ul>
                     <li v-for="item in userSaleList">
                         <p>
@@ -55,7 +55,7 @@
             <div class="right_business">
                 <!--业务模块-->
                 <div class="business_model">
-                    <p class="business_unite">业务模块:(单位:元)</p>
+                    <p class="business_unite">模块</p>
                     <ul>
                         <li v-for="item in categorySaleList">
                             <p>
@@ -68,7 +68,7 @@
                 <!--日、周、月排行榜-->
                 <div class="rank_model">
                     <div>
-                        <h3 class="rank_model_title">个人日排行榜</h3>
+                        <h3 class="rank_model_title">日排行榜</h3>
                         <ul>
                             <li class="rank_model_content" v-for="item in userDayList">
                                 <p :class="{day_rank:$index<3,day_rank_fore:$index>=3}">{{$index+1}}</p>
@@ -80,7 +80,7 @@
                         </ul>
                     </div>
                     <div>
-                        <h3 class="rank_model_title">个人周排行榜</h3>
+                        <h3 class="rank_model_title">周排行榜</h3>
                         <ul>
                             <li class="rank_model_content" v-for="item in userWeekList">
                                 <p :class="{day_rank:$index<3,day_rank_fore:$index>=3}">{{$index+1}}</p>
@@ -91,7 +91,7 @@
                         </ul>
                     </div>
                     <div>
-                        <h3 class="rank_model_title">个人月排行榜</h3>
+                        <h3 class="rank_model_title">月排行榜</h3>
                         <ul>
 
                             <li class="rank_model_content" v-for="item in userMonthList">
